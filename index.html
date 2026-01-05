@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DuoSub Online | Dual Subtitles Creator</title>
+    <title>DuoSub Online | Dual Subtitles Creator & Translate</title>
     <style>
         :root { --bg: #ffffff; --text: #202124; --border: #dadce0; --accent: #1a73e8; --panel: #f8f9fa; }
         [data-theme="dark"] { --bg: #202124; --text: #e8eaed; --border: #3c4043; --accent: #8ab4f8; --panel: #2d2e31; }
@@ -39,12 +39,12 @@
   gtag('config', 'G-LNRWB06VGZ');
 </script>
 </head>
-<body data-theme="dark">
+<body data-theme="light">
 
     <div class="header">
         <div class="logo-area">
-            <a href="https://duosub.github.io" class="logo">DuoSub Online</a>
-            <span class="sub-logo" id="site-desc">Перевод субтитров - создание двойных субтитров с/на любой язык</span>
+            <a href="https://duosub.github.io/online" class="logo">DuoSub free online (v1.1)</a>
+            <span class="sub-logo" id="site-desc">Subtitle Translation - Create dual subtitles</span>
         </div>
         <div class="controls-top">
             <a href="https://duosub.github.io/donate/" target="_blank" class="donate-btn">☕ Donate</a>
@@ -52,11 +52,13 @@
             <div class="lang-switcher">
                 🌐 <select id="ui-lang-select">
                     <option value="en">English</option>
-                    <option value="ru">Русский</option>
-                    <option value="es">Español</option>
-                    <option value="de">Deutsch</option>
-                    <option value="fr">Français</option>
-                    <option value="it">Italiano</option>
+        <option value="ru">Русский</option>
+        <option value="es">Español</option>
+        <option value="it">Italiano</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="cn">中文 (Chinese)</option>
+        <option value="hi">हिन्दी (Hindi)</option>
                 </select>
             </div>
         </div>
@@ -67,23 +69,25 @@
             <input type="file" id="file-input" accept=".srt,.ass">
             
             <select id="engine-select">
-                <option value="gas">Google Apps Script (DuoSub Key)</option>
-                <option value="gemini">Build-in Browser Gemini (window.ai)</option>
-                <option value="bing">Bing Translator (Web)</option>
-                <option value="google_web">Google Translate (Web Free)</option>
+                <option value="gemini">Build-in Browser Translate (Gemini window.ai)</option>
+                <option value="google_web">Google Translate (web Free)</option>
+                <option value="bing">Bing Translator (web Free)</option>
+                <option value="gas">Your Personal API Key</option>
+
             </select>
 
-            <input type="text" id="api-key-input" placeholder="Paste your Web App URL here...">
+            <input type="text" id="api-key-input" placeholder="Paste Your Personal API Key here...">
             
             <details>
-                <summary id="sum-help">How to get a Key?</summary>
+                <summary id="sum-help">How to get a Your Personal API Key?</summary>
                 <div class="instruction-box">
-                    <a href="https://duosub.github.io/help/" target="_blank" style="color:var(--accent)">Full Guide</a>
+                    <a href="https://duosub.github.io/help" target="_blank" style="color:var(--accent)">Full Guide</a>
                     <ol>
-                        <li>Sign in to script.google.com -> New Project</li>
-                        <li>Replace code with:</li>
-                        <code>function doPost(e){var p=JSON.parse(e.postData.contents);var t=LanguageApp.translate(p.q,"",p.target);return ContentService.createTextOutput(JSON.stringify({status:"success",translatedText:t})).setMimeType(ContentService.MimeType.JSON);}</code>
+                        <li>Sign in to <a href="https://script.google.com" target="_blank" style="color:var(--accent)">Google Script</a> and click + New Project</li>
+                        <li>Replace this code:</li>
+                        <code>function doPost(e){try{var p=JSON.parse(e.postData.contents),t=LanguageApp.translate(p.q,"",p.target||"en");return ContentService.createTextOutput(JSON.stringify({status:"success",translatedText:t})).setMimeType(ContentService.MimeType.JSON)}catch(i){return ContentService.createTextOutput(JSON.stringify({status:"error",message:i.toString()})).setMimeType(ContentService.MimeType.JSON)}}</code>
                         <li>Deploy -> New Deployment -> Web App (Access: Anyone)</li>
+                        <li>📄 Copy created link "https://script.google.com/macros/s/YOUR_PERSONAL_API_KEY/exec"</li>
                     </ol>
                 </div>
             </details>
@@ -94,20 +98,23 @@
             </div>
 
             <div style="display:flex; gap:10px; align-items:center;">
-                <span id="label-delay">Delay (s):</span>
-                <input type="number" id="delay-input" value="0" min="0" step="0.1" style="width:60px;">
-            </div>
+    <span id="label-delay">Delay (s):</span>
+    <input type="number" id="delay-input" value="0" min="0" step="0.1" style="width:60px;">
+    <span style="font-size: 0.9em; color: #666; font-style: italic;">
+        In case of translation errors, increase the delay time
+    </span>
+</div>
 
             <div class="btn-group">
                 <button id="start-btn" style="background:var(--accent); color:white; border:none;">START</button>
-                <button id="pause-btn">PAUSE</button>
-                <button id="stop-btn">STOP</button>
-                <button id="reset-btn">RESET</button>
+                <button id="pause-btn">⏸ Pause</button>
+                <button id="stop-btn">⏹ Stop</button>
+                <button id="reset-btn">🔄 Reset</button>
             </div>
 
             <div class="frame-header">
                 <span>System Logs</span>
-                <span class="send-logs" id="send-logs">Email Logs</span>
+                <span class="send-logs" id="send-logs">📧 Email Logs</span>
             </div>
             <div class="log-frame" id="log-frame"></div>
         </div>
@@ -115,10 +122,10 @@
         <div class="panel">
             <div class="frame-header">
                 <span id="label-preview">Live Preview</span>
-                <button id="download-btn" disabled style="padding:2px 8px;">Download</button>
+                <button id="download-btn" disabled style="padding:2px 8px;">💾 Download</button>
             </div>
             <div class="preview-frame">
-                <button class="copy-btn" id="copy-btn">COPY</button>
+                <button class="copy-btn" id="copy-btn">Copy</button>
                 <div id="preview-content"></div>
             </div>
         </div>
@@ -142,37 +149,40 @@
             "tr": "Turkish (Türkçe)", "uk": "Ukrainian (Українська)", "vi": "Vietnamese (Tiếng Việt)"
         };
 
-        const uiText = {
-            en: { start: "START", pause: "PAUSE", stop: "STOP", reset: "RESET", to: "Target:", delay: "Delay (s):", preview: "Live Preview", help: "How to get a Key?", site: "Subtitle Translation - Create dual subtitles to/from any language", copied: "COPIED!" },
-            ru: { start: "ПУСК", pause: "ПАУЗА", stop: "СТОП", reset: "СБРОС", to: "Перевод на:", delay: "Задержка (с):", preview: "Предпросмотр", help: "Как получить ключ?", site: "Перевод субтитров - создание двойных субтитров с/на любой язык", copied: "СКОПИРОВАНО!" }
+       const uiText = {
+            en: { start: "START", pause: "⏸ Pause", stop: "⏹ Stop", reset: "🔄 Reset", to: "Target:", delay: "Delay (s):", preview: "Live Preview", help: "How to get a Key?", site: "Subtitle Translation - Create dual subtitles to All language & from Any language", copied: "Copied!" },
+            ru: { start: "ПУСК", pause: "⏸ Пауза", stop: "⏹ Стоп", reset: "🔄 Сброс", to: "Перевод на:", delay: "Задержка (сек):", preview: "Предпросмотр", help: "Как получить ключ?", site: "Перевод субтитров - создание двойных субтитров с любого языка и на любой язык", copied: "Скопировано!" },
+            es: { start: "INICIAR", pause: "⏸ Pausa", stop: "⏹ Detener", reset: "🔄 Reiniciar", to: "Traducir a:", delay: "Retraso (s):", preview: "Vista previa", help: "Cómo obtener Clave?", site: "Traducción de subtítulos: crea subtítulos dobles para y desde cualquier idioma", copied: "¡Copiado!" },
+            it: { start: "AVVIA", pause: "⏸ Pausa", stop: "⏹ Stop", reset: "🔄 Resetta", to: "Traduci in:", delay: "Ritardo (s):", preview: "Anteprima", help: "Come avere la Key?", site: "Traduzione sottotitoli - Crea doppi sottotitoli da e verso qualsiasi lingua", copied: "Copiato!" },
+            fr: { start: "DÉMARRER", pause: "⏸ Pause", stop: "⏹ Arrêter", reset: "🔄 RàZ", to: "Traduire en :", delay: "Délai (s) :", preview: "Aperçu en direct", help: "Obtenir une Clé ?", site: "Traduction de sous-titres - Créez des sous-titres doubles depuis n'importe quelle langue", copied: "Copié !" },
+            de: { start: "START", pause: "⏸ Pause", stop: "⏹ Stopp", reset: "🔄 Reset", to: "Zielsprache:", delay: "Verzögerung (s):", preview: "Vorschau", help: "Key erhalten?", site: "Untertitel-Übersetzung – Erstellen Sie doppelte Untertitel in und aus jeder Sprache", copied: "Kopiert!" },
+            cn: { start: "开始", pause: "⏸ 暂停", stop: "⏹ 停止", reset: "🔄 重置", to: "翻译至:", delay: "延迟 (秒):", preview: "实时预览", help: "如何获取密钥?", site: "字幕翻译 - 创建所有语言的双语字幕", copied: "已复制!" },
+            hi: { start: "शुरू करें", pause: "⏸ रोकें", stop: "⏹ बंद करें", reset: "🔄 रीसेट", to: "अनुवाद भाषा:", delay: "देरी (s):", preview: "पूर्वावलोकन", help: "Key कैसे प्राप्त करें?", site: "उपशीर्षक अनुवाद - किसी भी भाषा से दोहरे उपशीर्षक बनाएं", copied: "कॉपी किया गया!" }
         };
 
         let isRunning = false, isPaused = false, blocks = [], currentIndex = 0, finalContent = "", originalFileName = "subtitles";
 
-        // Fill Languages
         const targetSelect = document.getElementById('target-lang');
         Object.entries(SUB_LANGS).forEach(([code, name]) => {
             const opt = document.createElement('option');
             opt.value = code; opt.innerText = name;
             targetSelect.appendChild(opt);
         });
-        targetSelect.value = "ru";
+        targetSelect.value = "en";
 
         function addLog(type, msg) {
             const logFrame = document.getElementById('log-frame');
-            const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
+            const time = new Date().toLocaleTimeString('en-US', { hour12: false });
             logFrame.innerText += `[${time}] [${type}] ${msg}\n`;
             logFrame.scrollTop = logFrame.scrollHeight;
         }
 
-        // Email Logs
         document.getElementById('send-logs').onclick = () => {
             const logs = encodeURIComponent(document.getElementById('log-frame').innerText);
             window.location.href = `mailto:duosubmail@gmail.com?subject=DuoSub Online Logs&body=${logs}`;
             addLog("USER", "Prepared email with logs.");
         };
 
-        // UI Events
         document.getElementById('theme-toggle').onclick = () => {
             document.body.dataset.theme = document.body.dataset.theme === "dark" ? "light" : "dark";
             addLog("USER", `Changed theme to ${document.body.dataset.theme}`);
@@ -200,34 +210,27 @@
             addLog("USER", `UI language: ${e.target.value}`);
         };
 
-        // Engine Translation Logic
         async function translate(text, target) {
             const engine = document.getElementById('engine-select').value;
             const customKey = document.getElementById('api-key-input').value;
-            
+
             try {
-                if (engine === 'gas') {
-                    const url = customKey || "https://script.google.com/macros/s/AKfycbw0p7W-x1Kz97fS/exec";
-                    const r = await fetch(url, { method: 'POST', body: JSON.stringify({q: text, target: target}) });
-                    const d = await r.json(); return d.translatedText;
-                } 
-                if (engine === 'gemini' && window.ai) {
+                                if (engine === 'gemini' && window.ai) {
                     const translator = await window.ai.translator.create({targetLanguage: target});
                     return await translator.translate(text);
                 }
-                // Fallback to Web Free
                 const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${target}&dt=t&q=${encodeURI(text)}`);
                 const d = await r.json(); return d[0].map(x => x[0]).join('');
-            } catch(e) { 
+            } catch(e) {
                 addLog("ERROR", `Engine ${engine} failed: ${e.message}`);
-                return "[Error]"; 
+                return "[Error]";
             }
         }
 
         document.getElementById('start-btn').onclick = async () => {
             const file = document.getElementById('file-input').files[0];
             if (!file) return addLog("ERROR", "Please select a file first.");
-            
+
             addLog("SYSTEM", "Initializing translation engine...");
             const text = await file.text();
             blocks = text.trim().split(/\n\s*\n/).map(b => {
@@ -248,13 +251,13 @@
 
                 addLog("ENGINE", `Processing block ${blocks[i].id}...`);
                 const trans = await translate(blocks[i].text, targetSelect.value);
-                
+
                 const dual = `${blocks[i].id}\n${blocks[i].time}\n${trans}\n${blocks[i].text}\n\n`;
                 finalContent += dual;
                 document.getElementById('preview-content').innerText += dual;
                 document.getElementById('preview-content').scrollTop = document.getElementById('preview-content').scrollHeight;
             }
-            
+
             addLog("FINAL", "Merging translations with original file...");
             addLog("SYSTEM", "Success! You can now save the dual subtitles.");
             document.getElementById('download-btn').disabled = false;
@@ -274,14 +277,14 @@
             navigator.clipboard.writeText(finalContent);
             const btn = document.getElementById('copy-btn');
             btn.innerText = "COPIED!";
-            setTimeout(() => btn.innerText = "COPY", 2000);
+            setTimeout(() => btn.innerText = "Copy", 2000);
             addLog("USER", "Copied to clipboard.");
         };
 
         document.getElementById('stop-btn').onclick = () => { isRunning = false; addLog("USER", "Process stopped."); };
-        document.getElementById('pause-btn').onclick = () => { 
-            isPaused = !isPaused; 
-            document.getElementById('pause-btn').innerText = isPaused ? "RESUME" : "PAUSE";
+        document.getElementById('pause-btn').onclick = () => {
+            isPaused = !isPaused;
+            document.getElementById('pause-btn').innerText = isPaused ? "Resume" : "⏸ Pause";
             addLog("USER", isPaused ? "Paused." : "Resumed.");
         };
         document.getElementById('reset-btn').onclick = () => { location.reload(); };
