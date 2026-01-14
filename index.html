@@ -3,33 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DuoSub Online | Dual Subtitles Creator & Translate</title>
-    <style>
-        :root { --bg: #ffffff; --text: #202124; --border: #dadce0; --accent: #1a73e8; --panel: #f8f9fa; }
-        [data-theme="dark"] { --bg: #202124; --text: #e8eaed; --border: #3c4043; --accent: #8ab4f8; --panel: #2d2e31; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; font-size: 13px; transition: background 0.2s; overflow-x: hidden; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
-        .logo-area { display: flex; flex-direction: column; }
-        .logo { font-weight: bold; font-size: 18px; color: var(--accent); text-decoration: none; }
-        .sub-logo { font-size: 10px; opacity: 0.7; }
-        .controls-top { display: flex; gap: 8px; align-items: center; }
-        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; height: calc(100vh - 90px); }
-        .panel { display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--border); padding: 12px; border-radius: 8px; background: var(--panel); overflow: hidden; }
-        select, input, button { background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 7px; border-radius: 4px; font-size: 12px; }
-        button { cursor: pointer; font-weight: 500; }
-        button:hover { opacity: 0.8; }
-        .donate-btn { background: #ff4757; color: white; border: none; text-decoration: none; padding: 7px 12px; border-radius: 4px; font-weight: bold; font-size: 12px; }
-        .log-frame, .preview-frame { flex-grow: 1; background: #00000015; border-radius: 4px; padding: 10px; font-family: "Consolas", "Monaco", monospace; font-size: 11px; overflow-y: auto; white-space: pre-wrap; position: relative; border: 1px solid var(--border); }
-        .frame-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-weight: bold; color: var(--accent); font-size: 10px; text-transform: uppercase; }
-        .instruction-box { font-size: 11px; background: rgba(26, 115, 232, 0.1); padding: 8px; border-radius: 4px; border-left: 3px solid var(--accent); margin: 5px 0; }
-        details summary { cursor: pointer; font-weight: bold; color: var(--accent); margin-bottom: 5px; }
-        code { background: #000; color: #0f0; padding: 5px; display: block; margin-top: 5px; overflow-x: auto; font-size: 10px; }
-        .btn-group { display: flex; gap: 5px; }
-        .btn-group button { flex: 1; }
-        .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--accent); color: white; border: none; padding: 4px 8px; z-index: 10; opacity: 0.8; }
-        .copy-btn:hover { opacity: 1; }
-        .send-logs { font-size: 10px; color: var(--accent); cursor: pointer; text-decoration: underline; }
-    </style>
+    <title>Dual Subtitles Creator & Translate</title>
+    <link rel="stylesheet" href="style.css">
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LNRWB06VGZ"></script>
 <script>
@@ -41,254 +16,112 @@
 </head>
 <body data-theme="light">
 
-    <div class="header">
-        <div class="logo-area">
-            <a href="https://duosub.github.io/online" class="logo">DuoSub free online (v1.1)</a>
-            <span class="sub-logo" id="site-desc">Subtitle Translation - Create dual subtitles</span>
+    <header class="header">
+        <div class="brand">
+            <a href="#" class="brand-name">DuoSub online - web Translator/Creator (v2.0)</a>
+            <span class="brand-desc" id="ui-desc">Subtitle Translation - Create dual subtitles to/from any language</span>
         </div>
-        <div class="controls-top">
-            <a href="https://duosub.github.io/donate/" target="_blank" class="donate-btn">☕ Donate</a>
-            <button id="theme-toggle">🌓 Theme</button>
-            <div class="lang-switcher">
-                🌐 <select id="ui-lang-select">
-                    <option value="en">English</option>
-        <option value="ru">Русский</option>
-        <option value="es">Español</option>
-        <option value="it">Italiano</option>
-        <option value="fr">Français</option>
-        <option value="de">Deutsch</option>
-        <option value="cn">中文 (Chinese)</option>
-        <option value="hi">हिन्दी (Hindi)</option>
-                </select>
+        <div class="controls">
+            🌐 <select id="lang-ui" style="width: auto; padding: 4px;">
+                <option value="en">English</option>
+                <option value="zh">简体中文</option>
+                <option value="ru">Русский</option>
+                <option value="es">Español</option>
+                <option value="de">Deutsch</option>
+                <option value="fr">Français</option>
+                <option value="it">Italiano</option>
+            </select>
+            <button class="btn" id="btn-reset">🔄 Reset</button>
+            <button class="btn" id="theme-btn">🌓 Theme</button>
+            <a href="https://duosub.github.io/donate" target="_blank" class="btn donate-btn" style="text-decoration:none">☕ Donate</a>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <div class="group">
+                <div class="file-drop" id="drop-zone">
+                    <span id="ui-drop">Click or Drop subtitle file<br>*.srt,*.ass,*.vtt,*.sub,*.txt (utf8)</span>
+                    <input type="file" id="file-input" accept=".srt,.ass,.vtt,.txt" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer;">
+                </div>
+                <div id="file-name" class="file-info"></div>
             </div>
-        </div>
+
+            <div class="group">
+                <span class="label" id="ui-engine">Translation Engine</span>
+                <select id="engine-select">
+                    <option value="google_free">Google Translate (Web Free)</option>
+                    <option value="gas">Google Apps Script (Personal API Key)</option>
+                </select>
+
+            </div>
+
+            <div class="group" id="api-group" style="display: none; margin-top: 10px;">
+    <span class="label" style="display: block; margin-bottom: 5px; font-weight: bold;">Personal API Key</span>
+    <input type="text" id="api-key-input" placeholder="Paste Your Personal API Key here..." style="width: 100%; box-sizing: border-box;">
+
+    <div style="text-align:right; margin-top:2px;">
+        <small style="cursor:pointer; color:var(--accent); text-decoration:underline;" onclick="document.getElementById('guide-box').style.display = document.getElementById('guide-box').style.display === 'none' ? 'block' : 'none'">How to create Key?</small>
     </div>
 
-    <div class="container">
-        <div class="panel">
-            <input type="file" id="file-input" accept=".srt,.ass">
-            
-            <select id="engine-select">
-                <option value="gemini">Build-in Browser Translate (Gemini window.ai)</option>
-                <option value="google_web">Google Translate (web Free)</option>
-                <option value="bing">Bing Translator (web Free)</option>
-                <option value="gas">Your Personal API Key</option>
-
-            </select>
-
-            <input type="text" id="api-key-input" placeholder="Paste Your Personal API Key here...">
-            
-            <details>
-                <summary id="sum-help">How to get a Your Personal API Key?</summary>
-                <div class="instruction-box">
-                    <a href="https://duosub.github.io/help" target="_blank" style="color:var(--accent)">Full Guide</a>
-                    <ol>
-                        <li>Sign in to <a href="https://script.google.com" target="_blank" style="color:var(--accent)">Google Script</a> and click + New Project</li>
-                        <li>Replace this code:</li>
-                        <code>function doPost(e){try{var p=JSON.parse(e.postData.contents),t=LanguageApp.translate(p.q,"",p.target||"en");return ContentService.createTextOutput(JSON.stringify({status:"success",translatedText:t})).setMimeType(ContentService.MimeType.JSON)}catch(i){return ContentService.createTextOutput(JSON.stringify({status:"error",message:i.toString()})).setMimeType(ContentService.MimeType.JSON)}}</code>
-                        <li>Deploy -> New Deployment -> Web App (Access: Anyone)</li>
-                        <li>📄 Copy created link "https://script.google.com/macros/s/YOUR_PERSONAL_API_KEY/exec"</li>
-                    </ol>
-                </div>
-            </details>
-
-            <div style="display:flex; gap:10px; align-items:center;">
-                <span id="label-to">Target:</span>
-                <select id="target-lang" style="flex-grow:1;"></select>
-            </div>
-
-            <div style="display:flex; gap:10px; align-items:center;">
-    <span id="label-delay">Delay (s):</span>
-    <input type="number" id="delay-input" value="0" min="0" step="0.1" style="width:60px;">
-    <span style="font-size: 0.9em; color: #666; font-style: italic;">
-        In case of translation errors, increase the delay time
-    </span>
+    <div class="api-guide" id="guide-box" style="display: none; margin-top: 5px;">
+        1. Go to <a href="https://script.google.com" target="_blank">script.google.com</a> & New Project.<br>
+        2. Paste code from instructions.<br>
+        <code>function doPost(e){try{var p=JSON.parse(e.postData.contents),t=LanguageApp.translate(p.q,"",p.target||"en");return ContentService.createTextOutput(JSON.stringify({status:"success",translatedText:t})).setMimeType(ContentService.MimeType.JSON)}catch(i){return ContentService.createTextOutput(JSON.stringify({status:"error",message:i.toString()})).setMimeType(ContentService.MimeType.JSON)}}</code>
+        3. Deploy > Web App > Who can access: Anyone</br>
+        4. 📄 Copy created link "https://script.google.com/macros/s/YOUR_PERSONAL_API_KEY/exec"</br>
+        <div style="text-align: center; margin-top: 10px;">
+        <a href="https://duosub.github.io/help" target="_blank" style="text-transform: capitalize;">Open full guide</a>
+    </div>
+    </div>
 </div>
 
-            <div class="btn-group">
-                <button id="start-btn" style="background:var(--accent); color:white; border:none;">START</button>
-                <button id="pause-btn">⏸ Pause</button>
-                <button id="stop-btn">⏹ Stop</button>
-                <button id="reset-btn">🔄 Reset</button>
+            <div class="group">
+                <span class="label" id="ui-target">Target Language</span>
+                <select id="target-lang"></select>
             </div>
 
-            <div class="frame-header">
-                <span>System Logs</span>
-                <span class="send-logs" id="send-logs">📧 Email Logs</span>
+            <div class="group">
+                <span class="label" id="ui-delay">Request Delay (Seconds)</span>
+                <input type="number" id="delay-input" value="0.5" min="0" step="0.1">
             </div>
-            <div class="log-frame" id="log-frame"></div>
-        </div>
 
-        <div class="panel">
-            <div class="frame-header">
-                <span id="label-preview">Live Preview</span>
-                <button id="download-btn" disabled style="padding:2px 8px;">💾 Download</button>
+            <div class="group" style="margin-top:auto">
+<div id="progress-container" class="progress-container" style="display: none;">
+    <div id="progress-bar" class="progress-bar"></div>
+</div>
+                <div style="display:flex; gap:5px; margin-top:5px;">
+                    <button id="btn-start" class="btn btn-primary" style="flex:2">START</button>
+                    <button id="btn-pause" class="btn" disabled>⏸ Pause</button>
+                    <button id="btn-stop" class="btn btn-danger" disabled>⏹ Stop</button>
+                </div>
             </div>
-            <div class="preview-frame">
-                <button class="copy-btn" id="copy-btn">Copy</button>
-                <div id="preview-content"></div>
+        </aside>
+
+        <main class="workspace">
+            <div class="preview-area">
+                <div class="panel-header">
+                    <span class="panel-title" id="ui-preview">Live Preview</span>
+                    <div class="controls">
+                         <button class="btn" id="btn-copy-sub">📋 Copy</button>
+                         <button class="btn btn-primary" id="btn-download" disabled>💾 Download</button>
+                    </div>
+                </div>
+                <div id="preview-content" class="code-block"></div>
             </div>
-        </div>
+            <div class="log-area">
+                <div class="panel-header">
+                    <span class="panel-title">System Logs</span>
+                    <div class="controls">
+                        <button class="btn" id="btn-email-log" style="font-size:10px; padding:2px 8px;">✉️ Report by Mail</button>
+                        <button class="btn" id="btn-copy-log" style="font-size:10px; padding:2px 8px;">📋 Copy Logs</button>
+                    </div>
+                </div>
+                <div id="log-content" class="code-block" style="font-size:11px;"></div>
+            </div>
+        </main>
     </div>
 
-    <script>
-        const SUB_LANGS = {
-            "af": "Afrikaans", "sq": "Albanian (Shqip)", "am": "Amharic (አማርኛ)", "ar": "Arabic (العربية)",
-            "hy": "Armenian (Հայերեն)", "az": "Azerbaijani (Azərbaycan)", "eu": "Basque (Euskara)",
-            "be": "Belarusian (Беларуская)", "bn": "Bengali (বাংলা)", "bs": "Bosnian (Bosanski)",
-            "bg": "Bulgarian (Български)", "ca": "Catalan (Català)", "zh-CN": "Chinese (Simplified) (简体中文)",
-            "zh-TW": "Chinese (Traditional) (繁體中文)", "hr": "Croatian (Hrvatski)", "cs": "Czech (Čeština)",
-            "da": "Danish (Dansk)", "nl": "Dutch (Nederlands)", "en": "English", "et": "Estonian (Eesti)",
-            "tl": "Filipino (Tagalog)", "fi": "Finnish (Suomi)", "fr": "French (Français)", "de": "German (Deutsch)",
-            "el": "Greek (Ελληνικά)", "he": "Hebrew (עبری)", "hi": "Hindi (हिन्दी)", "hu": "Hungarian (Magyar)",
-            "is": "Icelandic (Íslenska)", "id": "Indonesian (Bahasa Indonesia)", "it": "Italiano (Italian)",
-            "ja": "Japanese (日本語)", "ko": "Korean (한국어)", "lv": "Latvian (Latviešu)", "lt": "Lithuanian (Lietuvių)",
-            "no": "Norwegian (Norsk)", "pl": "Polish (Polski)", "pt": "Portuguese (Português)",
-            "ro": "Romanian (Română)", "ru": "Russian (Русский)", "sr": "Serbian (Српски)", "sk": "Slovak (Slovenčina)",
-            "sl": "Slovenian (Slovenščina)", "es": "Spanish (Español)", "sv": "Swedish (Svenska)", "th": "Thai (ไทย)",
-            "tr": "Turkish (Türkçe)", "uk": "Ukrainian (Українська)", "vi": "Vietnamese (Tiếng Việt)"
-        };
-
-       const uiText = {
-            en: { start: "START", pause: "⏸ Pause", stop: "⏹ Stop", reset: "🔄 Reset", to: "Target:", delay: "Delay (s):", preview: "Live Preview", help: "How to get a Key?", site: "Subtitle Translation - Create dual subtitles to All language & from Any language", copied: "Copied!" },
-            ru: { start: "ПУСК", pause: "⏸ Пауза", stop: "⏹ Стоп", reset: "🔄 Сброс", to: "Перевод на:", delay: "Задержка (сек):", preview: "Предпросмотр", help: "Как получить ключ?", site: "Перевод субтитров - создание двойных субтитров с любого языка и на любой язык", copied: "Скопировано!" },
-            es: { start: "INICIAR", pause: "⏸ Pausa", stop: "⏹ Detener", reset: "🔄 Reiniciar", to: "Traducir a:", delay: "Retraso (s):", preview: "Vista previa", help: "Cómo obtener Clave?", site: "Traducción de subtítulos: crea subtítulos dobles para y desde cualquier idioma", copied: "¡Copiado!" },
-            it: { start: "AVVIA", pause: "⏸ Pausa", stop: "⏹ Stop", reset: "🔄 Resetta", to: "Traduci in:", delay: "Ritardo (s):", preview: "Anteprima", help: "Come avere la Key?", site: "Traduzione sottotitoli - Crea doppi sottotitoli da e verso qualsiasi lingua", copied: "Copiato!" },
-            fr: { start: "DÉMARRER", pause: "⏸ Pause", stop: "⏹ Arrêter", reset: "🔄 RàZ", to: "Traduire en :", delay: "Délai (s) :", preview: "Aperçu en direct", help: "Obtenir une Clé ?", site: "Traduction de sous-titres - Créez des sous-titres doubles depuis n'importe quelle langue", copied: "Copié !" },
-            de: { start: "START", pause: "⏸ Pause", stop: "⏹ Stopp", reset: "🔄 Reset", to: "Zielsprache:", delay: "Verzögerung (s):", preview: "Vorschau", help: "Key erhalten?", site: "Untertitel-Übersetzung – Erstellen Sie doppelte Untertitel in und aus jeder Sprache", copied: "Kopiert!" },
-            cn: { start: "开始", pause: "⏸ 暂停", stop: "⏹ 停止", reset: "🔄 重置", to: "翻译至:", delay: "延迟 (秒):", preview: "实时预览", help: "如何获取密钥?", site: "字幕翻译 - 创建所有语言的双语字幕", copied: "已复制!" },
-            hi: { start: "शुरू करें", pause: "⏸ रोकें", stop: "⏹ बंद करें", reset: "🔄 रीसेट", to: "अनुवाद भाषा:", delay: "देरी (s):", preview: "पूर्वावलोकन", help: "Key कैसे प्राप्त करें?", site: "उपशीर्षक अनुवाद - किसी भी भाषा से दोहरे उपशीर्षक बनाएं", copied: "कॉपी किया गया!" }
-        };
-
-        let isRunning = false, isPaused = false, blocks = [], currentIndex = 0, finalContent = "", originalFileName = "subtitles";
-
-        const targetSelect = document.getElementById('target-lang');
-        Object.entries(SUB_LANGS).forEach(([code, name]) => {
-            const opt = document.createElement('option');
-            opt.value = code; opt.innerText = name;
-            targetSelect.appendChild(opt);
-        });
-        targetSelect.value = "en";
-
-        function addLog(type, msg) {
-            const logFrame = document.getElementById('log-frame');
-            const time = new Date().toLocaleTimeString('en-US', { hour12: false });
-            logFrame.innerText += `[${time}] [${type}] ${msg}\n`;
-            logFrame.scrollTop = logFrame.scrollHeight;
-        }
-
-        document.getElementById('send-logs').onclick = () => {
-            const logs = encodeURIComponent(document.getElementById('log-frame').innerText);
-            window.location.href = `mailto:duosubmail@gmail.com?subject=DuoSub Online Logs&body=${logs}`;
-            addLog("USER", "Prepared email with logs.");
-        };
-
-        document.getElementById('theme-toggle').onclick = () => {
-            document.body.dataset.theme = document.body.dataset.theme === "dark" ? "light" : "dark";
-            addLog("USER", `Changed theme to ${document.body.dataset.theme}`);
-        };
-
-        document.getElementById('file-input').onchange = (e) => {
-            const file = e.target.files[0];
-            if(file) {
-                originalFileName = file.name.split('.').slice(0, -1).join('.');
-                addLog("INIT", `File loaded: ${file.name}`);
-            }
-        };
-
-        document.getElementById('ui-lang-select').onchange = (e) => {
-            const t = uiText[e.target.value] || uiText.en;
-            document.getElementById('start-btn').innerText = t.start;
-            document.getElementById('pause-btn').innerText = t.pause;
-            document.getElementById('stop-btn').innerText = t.stop;
-            document.getElementById('reset-btn').innerText = t.reset;
-            document.getElementById('label-to').innerText = t.to;
-            document.getElementById('label-delay').innerText = t.delay;
-            document.getElementById('label-preview').innerText = t.preview;
-            document.getElementById('sum-help').innerText = t.help;
-            document.getElementById('site-desc').innerText = t.site;
-            addLog("USER", `UI language: ${e.target.value}`);
-        };
-
-        async function translate(text, target) {
-            const engine = document.getElementById('engine-select').value;
-            const customKey = document.getElementById('api-key-input').value;
-
-            try {
-                                if (engine === 'gemini' && window.ai) {
-                    const translator = await window.ai.translator.create({targetLanguage: target});
-                    return await translator.translate(text);
-                }
-                const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${target}&dt=t&q=${encodeURI(text)}`);
-                const d = await r.json(); return d[0].map(x => x[0]).join('');
-            } catch(e) {
-                addLog("ERROR", `Engine ${engine} failed: ${e.message}`);
-                return "[Error]";
-            }
-        }
-
-        document.getElementById('start-btn').onclick = async () => {
-            const file = document.getElementById('file-input').files[0];
-            if (!file) return addLog("ERROR", "Please select a file first.");
-
-            addLog("SYSTEM", "Initializing translation engine...");
-            const text = await file.text();
-            blocks = text.trim().split(/\n\s*\n/).map(b => {
-                const l = b.split('\n');
-                return { id: l[0], time: l[1], text: l.slice(2).join(' ') };
-            });
-
-            addLog("INIT", `Total lines to translate: ${blocks.length}`);
-            isRunning = true; currentIndex = 0; finalContent = "";
-            document.getElementById('preview-content').innerText = "";
-
-            for (let i = 0; i < blocks.length; i++) {
-                if (!isRunning) break;
-                while (isPaused) await new Promise(r => setTimeout(r, 500));
-
-                const delayVal = parseFloat(document.getElementById('delay-input').value) * 1000;
-                if (delayVal > 0) await new Promise(r => setTimeout(r, delayVal));
-
-                addLog("ENGINE", `Processing block ${blocks[i].id}...`);
-                const trans = await translate(blocks[i].text, targetSelect.value);
-
-                const dual = `${blocks[i].id}\n${blocks[i].time}\n${trans}\n${blocks[i].text}\n\n`;
-                finalContent += dual;
-                document.getElementById('preview-content').innerText += dual;
-                document.getElementById('preview-content').scrollTop = document.getElementById('preview-content').scrollHeight;
-            }
-
-            addLog("FINAL", "Merging translations with original file...");
-            addLog("SYSTEM", "Success! You can now save the dual subtitles.");
-            document.getElementById('download-btn').disabled = false;
-        };
-
-        document.getElementById('download-btn').onclick = () => {
-            const langSuffix = document.getElementById('target-lang').value;
-            const blob = new Blob([finalContent], {type: 'text/plain'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `${originalFileName}_${langSuffix}.srt`;
-            a.click();
-            addLog("USER", `File saved: ${a.download}`);
-        };
-
-        document.getElementById('copy-btn').onclick = () => {
-            navigator.clipboard.writeText(finalContent);
-            const btn = document.getElementById('copy-btn');
-            btn.innerText = "COPIED!";
-            setTimeout(() => btn.innerText = "Copy", 2000);
-            addLog("USER", "Copied to clipboard.");
-        };
-
-        document.getElementById('stop-btn').onclick = () => { isRunning = false; addLog("USER", "Process stopped."); };
-        document.getElementById('pause-btn').onclick = () => {
-            isPaused = !isPaused;
-            document.getElementById('pause-btn').innerText = isPaused ? "Resume" : "⏸ Pause";
-            addLog("USER", isPaused ? "Paused." : "Resumed.");
-        };
-        document.getElementById('reset-btn').onclick = () => { location.reload(); };
-
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
