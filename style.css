@@ -1,0 +1,368 @@
+:root {
+    --bg: #f8f9fa;
+    --surface: #ffffff;
+    --text: #202124;
+    --border: #dadce0;
+    --primary: #1a73e8;
+    --primary-hover: #1557b0;
+    --danger: #d93025;
+    --success: #188038;
+    --warn: #f9ab00;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+[data-theme="dark"] {
+    --bg: #202124;
+    --surface: #2d2e31;
+    --text: #e8eaed;
+    --border: #5f6368;
+    --primary: #8ab4f8;
+    --primary-hover: #aecbfa;
+    --danger: #f28b82;
+    --success: #81c995;
+    --warn: #fdd663;
+}
+
+* {
+    box-sizing: border-box;
+    /* outline: none; — Лучше убрать. Это убивает навигацию с клавиатуры. */
+}
+
+/* Возвращаем фокус для клавиатуры, но скрываем для мыши (современный способ) */
+*:focus-visible {
+    outline: 2px solid var(--primary);
+}
+
+body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background 0.3s, color 0.3s;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+/* Header & Brand */
+.header {
+    background: var(--surface);
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.brand {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+}
+
+.brand-desc {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-top: 2px;
+}
+
+/* Buttons container */
+.controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Common button styles */
+.btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+} /* <<< ЗДЕСЬ БЫЛА ОШИБКА (лишняя скобка удалена) */
+
+.btn:hover:not(:disabled) {
+    background: var(--bg);
+    border-color: var(--primary);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--primary-hover);
+    opacity: 0.9;
+}
+
+.btn-danger {
+    color: var(--danger);
+    border-color: var(--danger);
+}
+
+/* Specific button styles */
+#download-btn:hover {
+color: #ff4757;
+border-color: #ff4757;
+}
+
+.donate-btn {
+    background: #ff4757;
+    color: white;
+    border: none;
+    text-decoration: none;
+    padding: 7px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 12px;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.donate-btn:hover {
+    color: #ff4757;
+    background: white;
+    box-shadow: inset 0 0 0 1px #ff4757; /* Имитация border без смещения */
+}
+
+/* Layout */
+.main-layout {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 1px;
+    background: var(--border);
+    height: calc(100vh - 65px);
+}
+
+.sidebar {
+    background: var(--surface);
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.workspace {
+    background: var(--bg);
+    display: grid;
+    grid-template-rows: 1fr 250px;
+    gap: 1px;
+    overflow: hidden;
+}
+
+/* Forms & Inputs */
+.group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: none;
+    color: var(--text);
+    opacity: 0.9;
+}
+
+input, select {
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    width: 100%;
+}
+
+input:focus, select:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+/* File Drop Zone */
+.file-drop {
+    border: 2px dashed var(--border);
+    padding: 20px;
+    text-align: center;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    position: relative;
+}
+
+.file-drop:hover {
+    border-color: var(--primary);
+    background: rgba(26, 115, 232, 0.05);
+}
+
+.file-info {
+    text-align: center;
+    width: 100%;
+    color: var(--success); /* Использовал переменную вместо жесткого цвета */
+    margin-top: 10px;
+}
+
+/* Progress Bar */
+.progress-container {
+    width: 100%;
+    height: 20px;
+    background-color: var(--border); /* Использовал переменную */
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: var(--primary); /* Переменная для консистентности */
+    transition: width 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 10px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    font-weight: bold;
+}
+
+/* Areas & Frames */
+.preview-area, .log-area {
+    background: var(--surface);
+    padding: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-height: 0;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.panel-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* Code & Logs */
+.code-block {
+    flex-grow: 1;
+    font-family: "Consolas", "Monaco", monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    color: var(--text);
+    height: 100%;
+}
+
+.log-entry {
+    margin-bottom: 2px;
+    border-left: 3px solid transparent;
+    padding-left: 5px;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.log-info { border-color: var(--primary); }
+.log-warn { border-color: var(--warn); color: var(--warn); }
+.log-error { border-color: var(--danger); color: var(--danger); }
+.log-success { border-color: var(--success); color: var(--success); }
+.log-count { opacity: 0.7; font-size: 10px; }
+
+/* Help Guide */
+.api-guide {
+    font-size: 11px;
+    background: rgba(26, 115, 232, 0.1);
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 5px;
+    display: none;
+}
+
+.api-guide code {
+    display: block;
+    background: #000;
+    color: #0f0;
+    padding: 5px;
+    margin: 5px 0;
+    overflow-x: auto;
+}
+
+.field-hint {
+    font-size: 11px;
+    color: #888;
+    margin-top: 5px;
+    line-height: 1.2;
+    font-style: italic;
+}
+
+/* Custom Scrollbar (для красоты в темной теме) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* Mobile Responsive */
+@media (max-width: 800px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        overflow-y: auto;
+    }
+    .sidebar {
+        height: auto;
+        max-height: 40vh;
+    }
+}
